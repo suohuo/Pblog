@@ -9,7 +9,7 @@
   export default {
     data() {
       return {
-        title: "首页2"
+        title: "首页3"
       }
     }
 
