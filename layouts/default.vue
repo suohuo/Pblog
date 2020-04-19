@@ -1,18 +1,11 @@
 <template>
   <div>
-    <van-nav-bar :title="title"></van-nav-bar>
     <nuxt />
   </div>
 </template>
 
 <script>
   export default {
-    data() {
-      return {
-        title: "首页3"
-      }
-    }
-
   }
 </script>
 
@@ -64,4 +57,6 @@
     color: #fff;
     background-color: #35495e;
   }
+
+
 </style>
