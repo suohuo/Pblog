@@ -1,20 +1,40 @@
 <template>
-  <div class="container" overflow:hidden>
+  <div class="container">
     <!-- 使用vant的搜索和轮播组件，拼成的搜索跑马灯-->
-    <van-search @click="search" class="search" shape="round" fixed />
-    <!-- 点击事件不冒泡-->
-    <van-swipe
-      @change="getDefaultMsg"
-      class="roll"
-      :loop="true"
-      :vertical="true"
-      :autoplay="autoplay"
-      :touchable="false"
-      :show-indicators="false"
-      fixed
-    >
-      <van-swipe-item @click="search" v-for="(item,index) in messages" :key="index">{{item}}</van-swipe-item>
-    </van-swipe>
+    <div>
+      <van-search @click="search" class="search" shape="round" fixed />
+      <van-swipe
+        @change="getDefaultMsg"
+        class="roll"
+        :loop="true"
+        :vertical="true"
+        :autoplay="autoplay"
+        :touchable="false"
+        :show-indicators="false"
+        fixed
+      >
+        <van-swipe-item @click="search" v-for="(item,index) in messages" :key="index">{{item}}</van-swipe-item>
+      </van-swipe>
+    </div>
+
+    <!-- 标签导航栏-->
+    <div class="tag">
+      <van-tabs v-model="tagIndex" line-height="0px">
+        <van-tab
+          v-for="(tag,index) in category"
+          :key="index"
+          :to="{path:'/home/category/'+index}"
+          :append="false"
+        >
+          <template #title>
+            <van-tag v-if="tagIndex==index" color="#f2826a" round plain>{{ tag }}</van-tag>
+            <van-tag v-else color="#707070" round plain>{{ tag }}</van-tag>
+          </template>
+        </van-tab>
+      </van-tabs>
+    </div>
+
+    <nuxt-child keep-alive :key="tagIndex"></nuxt-child>
 
     <!-- pop弹窗 -->
     <Pop :show="show" :title="title" container="body" @func="closePop">
@@ -48,16 +68,6 @@
         </div>
       </div>
     </Pop>
-
-    <!-- 子页面插槽-->
-    <nuxt-child></nuxt-child>
-
-    <!-- 底部导航 -->
-    <van-tabbar v-model="active">
-      <van-tabbar-item icon="home-o">首页</van-tabbar-item>
-      <van-tabbar-item icon="star-o">收藏</van-tabbar-item>
-      <van-tabbar-item icon="manager-o">我</van-tabbar-item>
-    </van-tabbar>
   </div>
 </template>
 
@@ -66,40 +76,35 @@ import Vue from "vue";
 import Pop from "../components/Pop.vue";
 
 export default Vue.extend({
+  name: "index",
   components: {
     Pop
   },
   data() {
     return {
-      active: 0,
       autoplay: 3000,
-      messages: [
-        "大使痛批闯关美国",
-        "哈尔滨疫情跨省传播",
-        "云南严重干旱",
-        "天猫总裁因传言致歉1",
-        "大使痛批闯关美国1",
-        "哈尔滨疫情跨省传播1",
-        "云南严重干旱1",
-        "天猫总裁因传言致歉2",
-        "大使痛批闯关美国2",
-        "哈尔滨疫情跨省传播2",
-        "云南严重干旱2",
-        "天猫总裁因传言致歉3",
-        "大使痛批闯关美国3",
-        "哈尔滨疫情跨省传播3",
-        "云南严重干旱3",
-        "天猫总裁因传言致歉4",
-        "大使痛批闯关美国4",
-        "哈尔滨疫情跨省传播4",
-        "云南严重干旱4",
-        "天猫总裁因传言致歉4"
+      category: [
+        "js",
+        "java",
+        "pathon",
+        "mysql",
+        "cs",
+        "js",
+        "java",
+        "pathon",
+        "mysql",
+        "cs"
       ],
+      messages: ["pathon", "mysql", "java", "js", "cs"],
+
       show: false,
       title: "Pblog",
       //搜索内容
       value: "",
-      placeholder: ""
+      placeholder: "",
+      //防止keep-alive保存空白页给0
+      tagIndex: -1
+      // currentIndex: 0
     };
   },
   methods: {
@@ -110,7 +115,6 @@ export default Vue.extend({
     },
     //点击假搜索
     search() {
-      console.log(!this.show);
       this.show = !this.show;
     },
     //pop子组件调用
@@ -139,6 +143,10 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.container .nuxt-child {
+  height: 50%;
 }
 
 .title {
@@ -172,7 +180,7 @@ export default Vue.extend({
 
 .roll {
   position: absolute;
-  width: 100%;
+  width: 80%;
   left: 2.5rem;
   top: 0.95rem;
   height: 1.875rem;
@@ -185,25 +193,44 @@ export default Vue.extend({
   font-size: 1rem;
   font-weight: 400;
 }
+
 .realSearch {
   width: 85%;
   left: 0;
   top: 0;
   display: inline-block;
 }
+
 .realSearchCancel {
   left: 85%;
   top: 0;
   display: inline-block;
 }
+
 .history {
   margin-top: 1rem;
 }
+
 .hotspotTitle {
   margin-top: 0.625rem;
   margin-left: 1rem;
 }
+
 .hotspotTitle .van-cell {
   margin-left: -1rem;
+}
+
+.tag {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 3rem;
+}
+
+.tag .van-tag {
+  font-size: 0.75rem;
+  height: 1.5rem;
+  justify-content: center;
+  width: 4rem;
 }
 </style>
