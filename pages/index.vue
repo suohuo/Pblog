@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" overflow:hidden>
     <!-- 使用vant的搜索和轮播组件，拼成的搜索跑马灯-->
-    <van-search class="search" shape="round" />
+    <van-search @click="search" class="search" shape="round" fixed />
     <!-- 点击事件不冒泡-->
     <van-swipe
       @change="getDefaultMsg"
@@ -11,15 +11,48 @@
       :autoplay="autoplay"
       :touchable="false"
       :show-indicators="false"
+      fixed
     >
       <van-swipe-item @click="search" v-for="(item,index) in messages" :key="index">{{item}}</van-swipe-item>
     </van-swipe>
+
+    <!-- pop弹窗 -->
+    <Pop :show="show" :title="title" container="body" @func="closePop">
+      <!-- pop弹窗插槽 -->
+      <div slot="popContent">
+        <!-- pop弹窗插槽 搜索 -->
+        <div>
+          <van-search
+            class="realSearch"
+            v-model="value"
+            :placeholder="placeholder"
+            @search="selectHotSpot"
+            shape="round"
+          />
+          <p v-if="this.value==''" class="realSearchCancel" @click="closePop">取消</p>
+          <p v-else class="realSearchCancel" @click="selectHotSpot">搜索</p>
+        </div>
+        <!-- pop弹窗插槽 历史搜索记录 -->
+        <div class="history"></div>
+
+        <!-- pop弹窗插槽 热度搜索榜 -->
+        <div class="hotspotTitle">
+          <van-icon name="fire" color="red"></van-icon>
+          <span>今日热点</span>
+          <van-cell v-for="(item,index) in messages" :key="index">
+            <p @click="selectHotSpot(index)">
+              <span style="color:#a00000">{{index+1}}.</span>
+              {{item}}
+            </p>
+          </van-cell>
+        </div>
+      </div>
+    </Pop>
 
     <!-- 子页面插槽-->
     <nuxt-child></nuxt-child>
 
     <!-- 底部导航 -->
-
     <van-tabbar v-model="active">
       <van-tabbar-item icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item icon="star-o">收藏</van-tabbar-item>
@@ -30,8 +63,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import Pop from "../components/Pop.vue";
 
 export default Vue.extend({
+  components: {
+    Pop
+  },
   data() {
     return {
       active: 0,
@@ -40,20 +77,55 @@ export default Vue.extend({
         "大使痛批闯关美国",
         "哈尔滨疫情跨省传播",
         "云南严重干旱",
-        "天猫总裁因传言致歉1"
+        "天猫总裁因传言致歉1",
+        "大使痛批闯关美国1",
+        "哈尔滨疫情跨省传播1",
+        "云南严重干旱1",
+        "天猫总裁因传言致歉2",
+        "大使痛批闯关美国2",
+        "哈尔滨疫情跨省传播2",
+        "云南严重干旱2",
+        "天猫总裁因传言致歉3",
+        "大使痛批闯关美国3",
+        "哈尔滨疫情跨省传播3",
+        "云南严重干旱3",
+        "天猫总裁因传言致歉4",
+        "大使痛批闯关美国4",
+        "哈尔滨疫情跨省传播4",
+        "云南严重干旱4",
+        "天猫总裁因传言致歉4"
       ],
-      show: false
+      show: false,
+      title: "Pblog",
+      //搜索内容
+      value: "",
+      placeholder: ""
     };
   },
   methods: {
     //vant轮播组件 onchange回调index
     getDefaultMsg(index: number) {
+      this.placeholder = this.messages[index];
       console.log(index);
     },
     //点击假搜索
     search() {
       console.log(!this.show);
       this.show = !this.show;
+    },
+    //pop子组件调用
+    closePop() {
+      this.show = false;
+    },
+    //真搜索
+    onSearch() {
+      alert("搜索" + this.value);
+    },
+    //点击热点
+    selectHotSpot(index?: number) {
+      const hotspot = index && this.messages[index];
+      this.value = hotspot || this.value;
+      this.onSearch();
     }
   }
 });
@@ -112,5 +184,26 @@ export default Vue.extend({
 .roll.van-swipe-item {
   font-size: 1rem;
   font-weight: 400;
+}
+.realSearch {
+  width: 85%;
+  left: 0;
+  top: 0;
+  display: inline-block;
+}
+.realSearchCancel {
+  left: 85%;
+  top: 0;
+  display: inline-block;
+}
+.history {
+  margin-top: 1rem;
+}
+.hotspotTitle {
+  margin-top: 0.625rem;
+  margin-left: 1rem;
+}
+.hotspotTitle .van-cell {
+  margin-left: -1rem;
 }
 </style>
