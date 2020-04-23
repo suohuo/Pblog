@@ -7,7 +7,7 @@
         v-for="(item,index) in tabbar"
         :key="index"
         :name="item.path"
-        icon="home-o"
+        :icon="item.icon"
         :to="{path:item.path}"
       >{{item.name}}</van-tabbar-item>
     </van-tabbar>
@@ -19,9 +19,9 @@ export default {
   data() {
     return {
       tabbar: [
-        { path: "/home", name: "首页" },
-        { path: "/collect", name: "收藏" },
-        { path: "/my", name: "我" }
+        { path: "/home", name: "首页", icon: "home-o" },
+        { path: "/collect", name: "收藏", icon: "star-o" },
+        { path: "/my", name: "我", icon: "manager-o" }
       ],
       tagName: "/"
     };

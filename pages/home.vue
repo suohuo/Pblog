@@ -102,7 +102,7 @@ export default Vue.extend({
       //搜索内容
       value: "",
       placeholder: "",
-      //防止keep-alive保存空白页给0
+      //防止keep-alive
       tagIndex: -1
       // currentIndex: 0
     };
