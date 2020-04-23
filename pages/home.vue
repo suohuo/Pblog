@@ -131,13 +131,6 @@ export default Vue.extend({
       this.value = hotspot || this.value;
       this.onSearch();
     }
-  },
-  mounted() {
-    //初进入时
-    const index = this.$route.params.category || "0";
-    this.$router.push({
-      path: "/category/" + index
-    });
   }
 });
 </script>

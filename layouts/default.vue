@@ -28,11 +28,9 @@ export default {
   },
   beforeMount() {
     //初进入时
-    this.tabbar.some(item => {
-      return this.$route.path.indexOf(item)!=-1
-    });
-    this.tagName = this.$route.path;
-    console.log(this.$route.name);
+    const filter = item => this.$route.path.indexOf(item.path) != -1;
+    const result = this.tabbar.filter(filter);
+    this.tagName = result[0].path;
   }
 };
 </script>
